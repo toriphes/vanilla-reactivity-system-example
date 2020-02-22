@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Vanilla Reactivity System</title>
+  <link rel="stylesheet" href="bulma.min.css">
+  <script src="reactivity.js"></script>
+</head>
+
+<body>
+  <div class="section">
+    <div class="container">
+
+      <div class="columns">
+        <div class="column is-half is-offset-one-quarter">
+          <div class="field is-horizontal">
+            <div class="field-label is-normal">
+              <label class="label">Product price</label>
+            </div>
+            <div class="field-body">
+              <div class="field">
+                <p class="control">
+                  <input id="product_price_input" type="number" class="input" value="" />
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="field is-horizontal">
+            <div class="field-label is-normal">
+              <label class="label">Quantity</label>
+            </div>
+            <div class="field-body">
+              <div class="field">
+                <p class="control">
+                  <input id="product_quantity_input" readonly type="number" class="input is-static" value="" />
+                </p>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="level">
+            <div class="level-left">
+              <div class="level-item">
+                <button id="inc" class="button">Increment quantity</button>
+
+              </div>
+            </div>
+            <div class="level-right">
+              <div class="level-item has-text-weight-bold	">
+                Total price: $<span id="res"></span>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+  <script>
+    const res = document.getElementById("res");
+    const incButton = document.getElementById("inc");
+    const priceInput = document.getElementById("product_price_input");
+    const quantityInput = document.getElementById("product_quantity_input");
+
+    // make this object reactive in order to track any changes
+    const state = makeReactive({
+      quantity: 1,
+      price: 10.0
+    });
+
+    priceInput.addEventListener('keyup', (e) => {
+      state.price = e.target.value;
+    })
+
+    incButton.addEventListener('click', () => {
+      state.quantity++;
+    })
+
+    // autorun function is a sort of watcher
+    // the callback is the task will be executed at each state property change
+    autorun(() => {
+      priceInput.value = state.price;
+      quantityInput.value = state.quantity;
+      res.innerHTML = state.quantity * state.price;
+    })
+  </script>
+</body>
+
+</html>
